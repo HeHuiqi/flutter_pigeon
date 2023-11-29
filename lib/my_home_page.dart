@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'FlutterBridgeApi.dart';
-import 'FlutterApiImp.dart';
+import 'flutter_bridge_api.dart';
+import 'flutter_api_imp.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -13,7 +13,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String platformVersion = '';
   //调用Native方法
   Future<String?> callNativePlatform() async {
-    final api = NativeApi();
+    final api = NativeApiInterface();
     final result = await api.getPlatformVersion();
     return result;
   }
@@ -22,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     //注册Flutter实现
     final apiManager = FlutterApiImp();
-    FlutterApi.setup(apiManager);
+    FlutterApiInterface.setup(apiManager);
     super.initState();
   }
 

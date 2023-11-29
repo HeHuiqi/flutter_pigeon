@@ -9,20 +9,20 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-/// The codec used by FLTNativeApi.
-NSObject<FlutterMessageCodec> *FLTNativeApiGetCodec(void);
+/// The codec used by FLTNativeApiInterface.
+NSObject<FlutterMessageCodec> *FLTNativeApiInterfaceGetCodec(void);
 
-@protocol FLTNativeApi
+@protocol FLTNativeApiInterface
 /// @return `nil` only when `error != nil`.
 - (nullable NSString *)getPlatformVersionWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
-extern void FLTNativeApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLTNativeApi> *_Nullable api);
+extern void FLTNativeApiInterfaceSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLTNativeApiInterface> *_Nullable api);
 
-/// The codec used by FLTFlutterApi.
-NSObject<FlutterMessageCodec> *FLTFlutterApiGetCodec(void);
+/// The codec used by FLTFlutterApiInterface.
+NSObject<FlutterMessageCodec> *FLTFlutterApiInterfaceGetCodec(void);
 
-@interface FLTFlutterApi : NSObject
+@interface FLTFlutterApiInterface : NSObject
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
 - (void)sessionInvalidWithCompletion:(void(^)(NSError *_Nullable))completion;
 @end

@@ -28,47 +28,47 @@ static id GetNullableObject(NSDictionary* dict, id key) {
 
 
 
-@interface FLTNativeApiCodecReader : FlutterStandardReader
+@interface FLTNativeApiInterfaceCodecReader : FlutterStandardReader
 @end
-@implementation FLTNativeApiCodecReader
-@end
-
-@interface FLTNativeApiCodecWriter : FlutterStandardWriter
-@end
-@implementation FLTNativeApiCodecWriter
+@implementation FLTNativeApiInterfaceCodecReader
 @end
 
-@interface FLTNativeApiCodecReaderWriter : FlutterStandardReaderWriter
+@interface FLTNativeApiInterfaceCodecWriter : FlutterStandardWriter
 @end
-@implementation FLTNativeApiCodecReaderWriter
+@implementation FLTNativeApiInterfaceCodecWriter
+@end
+
+@interface FLTNativeApiInterfaceCodecReaderWriter : FlutterStandardReaderWriter
+@end
+@implementation FLTNativeApiInterfaceCodecReaderWriter
 - (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
-  return [[FLTNativeApiCodecWriter alloc] initWithData:data];
+  return [[FLTNativeApiInterfaceCodecWriter alloc] initWithData:data];
 }
 - (FlutterStandardReader *)readerWithData:(NSData *)data {
-  return [[FLTNativeApiCodecReader alloc] initWithData:data];
+  return [[FLTNativeApiInterfaceCodecReader alloc] initWithData:data];
 }
 @end
 
-NSObject<FlutterMessageCodec> *FLTNativeApiGetCodec() {
+NSObject<FlutterMessageCodec> *FLTNativeApiInterfaceGetCodec() {
   static dispatch_once_t sPred = 0;
   static FlutterStandardMessageCodec *sSharedObject = nil;
   dispatch_once(&sPred, ^{
-    FLTNativeApiCodecReaderWriter *readerWriter = [[FLTNativeApiCodecReaderWriter alloc] init];
+    FLTNativeApiInterfaceCodecReaderWriter *readerWriter = [[FLTNativeApiInterfaceCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
 
-void FLTNativeApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLTNativeApi> *api) {
+void FLTNativeApiInterfaceSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLTNativeApiInterface> *api) {
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.NativeApi.getPlatformVersion"
+        messageChannelWithName:@"dev.flutter.pigeon.NativeApiInterface.getPlatformVersion"
         binaryMessenger:binaryMessenger
-        codec:FLTNativeApiGetCodec()];
+        codec:FLTNativeApiInterfaceGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getPlatformVersionWithError:)], @"FLTNativeApi api (%@) doesn't respond to @selector(getPlatformVersionWithError:)", api);
+      NSCAssert([api respondsToSelector:@selector(getPlatformVersionWithError:)], @"FLTNativeApiInterface api (%@) doesn't respond to @selector(getPlatformVersionWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         NSString *output = [api getPlatformVersionWithError:&error];
@@ -80,43 +80,43 @@ void FLTNativeApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLTN
     }
   }
 }
-@interface FLTFlutterApiCodecReader : FlutterStandardReader
+@interface FLTFlutterApiInterfaceCodecReader : FlutterStandardReader
 @end
-@implementation FLTFlutterApiCodecReader
-@end
-
-@interface FLTFlutterApiCodecWriter : FlutterStandardWriter
-@end
-@implementation FLTFlutterApiCodecWriter
+@implementation FLTFlutterApiInterfaceCodecReader
 @end
 
-@interface FLTFlutterApiCodecReaderWriter : FlutterStandardReaderWriter
+@interface FLTFlutterApiInterfaceCodecWriter : FlutterStandardWriter
 @end
-@implementation FLTFlutterApiCodecReaderWriter
+@implementation FLTFlutterApiInterfaceCodecWriter
+@end
+
+@interface FLTFlutterApiInterfaceCodecReaderWriter : FlutterStandardReaderWriter
+@end
+@implementation FLTFlutterApiInterfaceCodecReaderWriter
 - (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
-  return [[FLTFlutterApiCodecWriter alloc] initWithData:data];
+  return [[FLTFlutterApiInterfaceCodecWriter alloc] initWithData:data];
 }
 - (FlutterStandardReader *)readerWithData:(NSData *)data {
-  return [[FLTFlutterApiCodecReader alloc] initWithData:data];
+  return [[FLTFlutterApiInterfaceCodecReader alloc] initWithData:data];
 }
 @end
 
-NSObject<FlutterMessageCodec> *FLTFlutterApiGetCodec() {
+NSObject<FlutterMessageCodec> *FLTFlutterApiInterfaceGetCodec() {
   static dispatch_once_t sPred = 0;
   static FlutterStandardMessageCodec *sSharedObject = nil;
   dispatch_once(&sPred, ^{
-    FLTFlutterApiCodecReaderWriter *readerWriter = [[FLTFlutterApiCodecReaderWriter alloc] init];
+    FLTFlutterApiInterfaceCodecReaderWriter *readerWriter = [[FLTFlutterApiInterfaceCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
 
-@interface FLTFlutterApi ()
+@interface FLTFlutterApiInterface ()
 @property (nonatomic, strong) NSObject<FlutterBinaryMessenger> *binaryMessenger;
 @end
 
-@implementation FLTFlutterApi
+@implementation FLTFlutterApiInterface
 
 - (instancetype)initWithBinaryMessenger:(NSObject<FlutterBinaryMessenger> *)binaryMessenger {
   self = [super init];
@@ -128,9 +128,9 @@ NSObject<FlutterMessageCodec> *FLTFlutterApiGetCodec() {
 - (void)sessionInvalidWithCompletion:(void(^)(NSError *_Nullable))completion {
   FlutterBasicMessageChannel *channel =
     [FlutterBasicMessageChannel
-      messageChannelWithName:@"dev.flutter.pigeon.FlutterApi.sessionInvalid"
+      messageChannelWithName:@"dev.flutter.pigeon.FlutterApiInterface.sessionInvalid"
       binaryMessenger:self.binaryMessenger
-      codec:FLTFlutterApiGetCodec()];
+      codec:FLTFlutterApiInterfaceGetCodec()];
   [channel sendMessage:nil reply:^(id reply) {
     completion(nil);
   }];

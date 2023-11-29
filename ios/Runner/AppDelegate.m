@@ -5,7 +5,7 @@
 
 @interface AppDelegate ()
 
-@property (nonatomic, strong) FLTFlutterApi *flutterApi;
+@property (nonatomic, strong) FLTFlutterApiInterface *flutterApi;
 
 @end
 
@@ -18,8 +18,8 @@
     FlutterViewController *rootVC = (FlutterViewController *)self.window.rootViewController;
     
     //注册Native实现
-    FLTNativeApiSetup(rootVC.binaryMessenger, [FlutterNativeApiImp new]);
-    self.flutterApi = [[FLTFlutterApi alloc] initWithBinaryMessenger:rootVC.binaryMessenger];
+    FLTNativeApiInterfaceSetup(rootVC.binaryMessenger, [FlutterNativeApiImp new]);
+    self.flutterApi = [[FLTFlutterApiInterface alloc] initWithBinaryMessenger:rootVC.binaryMessenger];
     
     [GeneratedPluginRegistrant registerWithRegistry:self];
 

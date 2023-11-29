@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FlutterNativeApiImp : NSObject<FLTNativeApi>
+@interface FlutterNativeApiImp : NSObject<FLTNativeApiInterface>
 
 @end
 

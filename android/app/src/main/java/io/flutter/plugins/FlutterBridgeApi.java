@@ -21,25 +21,25 @@ import java.util.HashMap;
 /** Generated class from Pigeon. */
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression"})
 public class FlutterBridgeApi {
-  private static class NativeApiCodec extends StandardMessageCodec {
-    public static final NativeApiCodec INSTANCE = new NativeApiCodec();
-    private NativeApiCodec() {}
+  private static class NativeApiInterfaceCodec extends StandardMessageCodec {
+    public static final NativeApiInterfaceCodec INSTANCE = new NativeApiInterfaceCodec();
+    private NativeApiInterfaceCodec() {}
   }
 
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
-  public interface NativeApi {
+  public interface NativeApiInterface {
     @NonNull String getPlatformVersion();
 
-    /** The codec used by NativeApi. */
+    /** The codec used by NativeApiInterface. */
     static MessageCodec<Object> getCodec() {
-      return NativeApiCodec.INSTANCE;
+      return NativeApiInterfaceCodec.INSTANCE;
     }
 
-    /** Sets up an instance of `NativeApi` to handle messages through the `binaryMessenger`. */
-    static void setup(BinaryMessenger binaryMessenger, NativeApi api) {
+    /** Sets up an instance of `NativeApiInterface` to handle messages through the `binaryMessenger`. */
+    static void setup(BinaryMessenger binaryMessenger, NativeApiInterface api) {
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.NativeApi.getPlatformVersion", getCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.NativeApiInterface.getPlatformVersion", getCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -58,27 +58,27 @@ public class FlutterBridgeApi {
       }
     }
   }
-  private static class FlutterApiCodec extends StandardMessageCodec {
-    public static final FlutterApiCodec INSTANCE = new FlutterApiCodec();
-    private FlutterApiCodec() {}
+  private static class FlutterApiInterfaceCodec extends StandardMessageCodec {
+    public static final FlutterApiInterfaceCodec INSTANCE = new FlutterApiInterfaceCodec();
+    private FlutterApiInterfaceCodec() {}
   }
 
   /** Generated class from Pigeon that represents Flutter messages that can be called from Java.*/
-  public static class FlutterApi {
+  public static class FlutterApiInterface {
     private final BinaryMessenger binaryMessenger;
-    public FlutterApi(BinaryMessenger argBinaryMessenger){
+    public FlutterApiInterface(BinaryMessenger argBinaryMessenger){
       this.binaryMessenger = argBinaryMessenger;
     }
     public interface Reply<T> {
       void reply(T reply);
     }
     static MessageCodec<Object> getCodec() {
-      return FlutterApiCodec.INSTANCE;
+      return FlutterApiInterfaceCodec.INSTANCE;
     }
 
     public void sessionInvalid(Reply<Void> callback) {
       BasicMessageChannel<Object> channel =
-          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FlutterApi.sessionInvalid", getCodec());
+          new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FlutterApiInterface.sessionInvalid", getCodec());
       channel.send(null, channelReply -> {
         callback.reply(null);
       });

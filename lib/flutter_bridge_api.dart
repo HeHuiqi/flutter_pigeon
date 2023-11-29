@@ -8,24 +8,24 @@ import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 import 'package:flutter/foundation.dart' show WriteBuffer, ReadBuffer;
 import 'package:flutter/services.dart';
 
-class _NativeApiCodec extends StandardMessageCodec {
-  const _NativeApiCodec();
+class _NativeApiInterfaceCodec extends StandardMessageCodec {
+  const _NativeApiInterfaceCodec();
 }
 
-class NativeApi {
-  /// Constructor for [NativeApi].  The [binaryMessenger] named argument is
+class NativeApiInterface {
+  /// Constructor for [NativeApiInterface].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  NativeApi({BinaryMessenger? binaryMessenger})
+  NativeApiInterface({BinaryMessenger? binaryMessenger})
       : _binaryMessenger = binaryMessenger;
 
   final BinaryMessenger? _binaryMessenger;
 
-  static const MessageCodec<Object?> codec = _NativeApiCodec();
+  static const MessageCodec<Object?> codec = _NativeApiInterfaceCodec();
 
   Future<String> getPlatformVersion() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.NativeApi.getPlatformVersion', codec,
+        'dev.flutter.pigeon.NativeApiInterface.getPlatformVersion', codec,
         binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
@@ -53,18 +53,19 @@ class NativeApi {
   }
 }
 
-class _FlutterApiCodec extends StandardMessageCodec {
-  const _FlutterApiCodec();
+class _FlutterApiInterfaceCodec extends StandardMessageCodec {
+  const _FlutterApiInterfaceCodec();
 }
 
-abstract class FlutterApi {
-  static const MessageCodec<Object?> codec = _FlutterApiCodec();
+abstract class FlutterApiInterface {
+  static const MessageCodec<Object?> codec = _FlutterApiInterfaceCodec();
 
   void sessionInvalid();
-  static void setup(FlutterApi? api, {BinaryMessenger? binaryMessenger}) {
+  static void setup(FlutterApiInterface? api,
+      {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.FlutterApi.sessionInvalid', codec,
+          'dev.flutter.pigeon.FlutterApiInterface.sessionInvalid', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         channel.setMessageHandler(null);

@@ -12,27 +12,27 @@ dev_dependencies:
 ```dart
 // 在根目录创建pigeon 目录，存放所有的接口定义
 // api_interface.dart
-
 import 'package:pigeon/pigeon.dart';
 
 // Flutter 调用Native的接口定义，需要Native端实现定义的接口
 @HostApi()
-abstract class NativeApi {
+abstract class NativeApiInterface {
   String getPlatformVersion();
 }
 
 // 原生调用 Flutter的接口定义，需要futter端实现定义的接口
 @FlutterApi()
-abstract class FlutterApi {
+abstract class FlutterApiInterface {
   void sessionInvalid();
 }
+
 ```
 ## 运行命令生成代码各端代码
 ```shell
 # 代码文件名根据情况自己定义
 flutter pub run pigeon \
  --input pigeon/api_interface.dart \
- --dart_out lib/FlutterBridgeApi.dart  \
+ --dart_out lib/flutter_bridge_api.dart  \
  --objc_header_out ios/Runner/FlutterBridgeApi.h \
  --objc_source_out ios/Runner/FlutterBridgeApi.m \
  --objc_prefix FLT \
@@ -58,7 +58,7 @@ FlutterNativeApiImp.h
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FlutterNativeApiImp : NSObject<FLTNativeApi>
+@interface FlutterNativeApiImp : NSObject<FLTNativeApiInterface>
 
 @end
 
@@ -99,7 +99,7 @@ FlutterNativeApiImp.m
 
 @interface AppDelegate ()
 
-@property (nonatomic, strong) FLTFlutterApi *flutterApi;
+@property (nonatomic, strong) FLTFlutterApiInterface *flutterApi;
 
 @end
 
@@ -112,13 +112,12 @@ FlutterNativeApiImp.m
     FlutterViewController *rootVC = (FlutterViewController *)self.window.rootViewController;
     
     //注册Native实现
-    FLTNativeApiSetup(rootVC.binaryMessenger, [FlutterNativeApiImp new]);
-    self.flutterApi = [[FLTFlutterApi alloc] initWithBinaryMessenger:rootVC.binaryMessenger];
+    FLTNativeApiInterfaceSetup(rootVC.binaryMessenger, [FlutterNativeApiImp new]);
+    self.flutterApi = [[FLTFlutterApiInterface alloc] initWithBinaryMessenger:rootVC.binaryMessenger];
     
     [GeneratedPluginRegistrant registerWithRegistry:self];
 
-    //调用flutter方法示例
-    //必须在主线程
+    //调用fluter方法 必须在主线程
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.flutterApi sessionInvalidWithCompletion:^(NSError * _Nullable error) {
             NSLog(@"sessionInvalidWithCompletion==%@",error.localizedDescription);
@@ -130,17 +129,18 @@ FlutterNativeApiImp.m
 
 @end
 
+
 ```
 
 ## Flutter 实现
 
 ```dart
-// FlutterApiImp.dart
+// flutter_api_imp.dart
 import 'package:flutter/foundation.dart';
 
-import 'FlutterBridgeApi.dart';
+import 'flutter_bridge_api.dart';
 
-class FlutterApiImp extends FlutterApi {
+class FlutterApiImp extends FlutterApiInterface {
   @override
   void sessionInvalid() {
     if (kDebugMode) {
@@ -152,10 +152,10 @@ class FlutterApiImp extends FlutterApi {
 ```
 ## Flutter 注册实现和调用Native
 ```dart
-// MyHomePage.dart
+// my_home_page.dart
 import 'package:flutter/material.dart';
-import 'FlutterBridgeApi.dart';
-import 'FlutterApiImp.dart';
+import 'flutter_bridge_api.dart';
+import 'flutter_api_imp.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -168,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String platformVersion = '';
   //调用Native方法
   Future<String?> callNativePlatform() async {
-    final api = NativeApi();
+    final api = NativeApiInterface();
     final result = await api.getPlatformVersion();
     return result;
   }
@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     //注册Flutter实现
     final apiManager = FlutterApiImp();
-    FlutterApi.setup(apiManager);
+    FlutterApiInterface.setup(apiManager);
     super.initState();
   }
 
@@ -213,6 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 ```
 
 
